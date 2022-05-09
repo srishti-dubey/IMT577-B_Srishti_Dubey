@@ -1,0 +1,67 @@
+CREATE OR REPLACE TABLE Dim_Location(
+    DimLocationID INT IDENTITY(1,1) CONSTRAINT PK_DimLocationID PRIMARY KEY NOT NULL --Surrogate Key
+    ,Address VARCHAR(255) NOT NULL
+    ,City VARCHAR(255) NOT NULL
+    ,PostalCode VARCHAR(255) NOT NULL
+    ,State_Province VARCHAR(255) NOT NULL
+    ,Country VARCHAR(50) NOT NULL
+);
+
+INSERT INTO Dim_Location
+(
+     DimLocationID
+	,Address
+    ,City
+    ,PostalCode
+    ,State_Province
+    ,Country
+)
+VALUES
+( 
+     -1
+    ,-1
+    ,'Unknown' 
+    ,'Unknown'
+    ,'Unknown'
+    ,'Unknown'
+    
+);
+
+
+INSERT INTO Dim_Location
+(
+     Address
+    ,City
+    ,PostalCode
+    ,State_Province
+    ,Country
+)
+SELECT 
+    DISTINCT Address
+    ,City
+    ,PostalCode
+    ,StateProvince AS State_Province
+    ,Country
+   FROM CUSTOMER
+
+UNION
+
+SELECT 
+    DISTINCT Address
+    ,City
+    ,PostalCode
+    ,StateProvince AS State_Province
+    ,Country
+   FROM STORE
+   
+UNION
+
+SELECT 
+    DISTINCT Address
+    ,City
+    ,PostalCode
+    ,StateProvince AS State_Province
+    ,Country
+   FROM RESELLER;
+  
+  SELECT * FROM Dim_Location
