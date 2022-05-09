@@ -1,0 +1,40 @@
+create or replace table DIM_CHANNEL (
+	DimChannelID              INT IDENTITY(1,1) CONSTRAINT PK_DimChannelID PRIMARY KEY NOT NULL,
+    SourceChannelID           INT NOT NULL,
+    SourceChannelCategoryID   INT NOT NULL,
+    ChannelName               VARCHAR(255) NOT NULL,
+    ChannelCategory           VARCHAR(255) NOT NULL
+  )
+  
+  INSERT INTO DIM_CHANNEL (
+	DimChannelID,
+    SourceChannelID,
+    SourceChannelCategoryID,
+    ChannelName,
+    ChannelCategory
+  )
+  VALUES(
+    -1,
+    -1,
+    -1,
+    'Unknown',
+    'Unknown'
+  )
+  
+  SELECT * FROM DIM_CHANNEL
+
+INSERT INTO DIM_CHANNEL (
+    SourceChannelID,
+    SourceChannelCategoryID,
+    ChannelName,
+    ChannelCategory
+  )
+  SELECT 
+  C.ChannelID AS SourceChannelID, 
+  CC.ChannelCategoryID,
+  C.Channel AS ChannelName,
+  CC.ChannelCategory
+  FROM CHANNEL C
+  INNER JOIN CHANNEL_CATEGORY CC ON CC.ChannelCategoryID = C.ChannelCategoryID
+  
+  SELECT * FROM DIM_CHANNEL

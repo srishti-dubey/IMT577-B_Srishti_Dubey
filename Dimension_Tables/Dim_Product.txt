@@ -1,0 +1,83 @@
+create or replace table DIM_PRODUCT (
+	DimProductID              INT IDENTITY(1,1) CONSTRAINT PK_ProductID PRIMARY KEY NOT NULL,
+    SourceProductID           INT NOT NULL,
+    SourceProductTypeID       INT NOT NULL,
+    SourceProductCategoryID   INT NOT NULL,
+    ProductName               VARCHAR(255) NOT NULL,
+    ProductType               VARCHAR(255) NOT NULL,
+    ProductCategory           VARCHAR(255) NOT NULL,
+    ProductRetailPrice        FLOAT NOT NULL,
+    ProductWholesalePrice     FLOAT NOT NULL,
+    ProductCost               FLOAT NOT NULL,
+    ProductRetailProfit       FLOAT NOT NULL,
+    ProductWholesaleUnitProfit FLOAT NOT NULL,
+    ProductProfitMarginUnitPercent FLOAT NOT NULL
+ 
+  )
+  
+  INSERT INTO DIM_PRODUCT (
+	DimProductID,
+    SourceProductID,
+    SourceProductTypeID,
+    SourceProductCategoryID,
+    ProductName,
+    ProductType,
+    ProductCategory,
+    ProductRetailPrice,
+    ProductWholesalePrice,
+    ProductCost,
+    ProductRetailProfit,
+    ProductWholesaleUnitProfit,
+    ProductProfitMarginUnitPercent
+  )
+  VALUES(
+    -1,
+    -1,
+    -1,
+    -1,
+    'Unknown',
+    'Unknown',
+    'Unknown',
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+  )
+  
+  SELECT * FROM DIM_Product
+
+INSERT INTO DIM_PRODUCT (
+    SourceProductID,
+    SourceProductTypeID,
+    SourceProductCategoryID,
+    ProductName,
+    ProductType,
+    ProductCategory,
+    ProductRetailPrice,
+    ProductWholesalePrice,
+    ProductCost,
+    ProductRetailProfit,
+    ProductWholesaleUnitProfit,
+    ProductProfitMarginUnitPercent
+  )
+  SELECT 
+    P.ProductID AS SourceProductID,
+    PT.ProductTypeID AS SourceProductTypeID,
+    PC.ProductCategoryID AS SourceProductCategoryID,
+    P.Product AS ProductName,
+    PT.ProductType,
+    PC.ProductCategory,
+    P.Price AS ProductRetailPrice,
+    P.Cost AS ProductCost,
+    P.WholesalePrice AS ProductWholesalePrice,
+    (P.Price - P.Cost) AS ProductRetailProfit,
+    (P.WholesalePrice - P.Cost) AS ProductWholesaleUnitProfit,
+    (((P.Price - P.Cost)/P.Cost)*100) AS ProductProfitMarginUnitPercent
+    FROM PRODUCT P
+    INNER JOIN PRODUCT_TYPE PT ON P.ProductTypeID = PT.ProductTypeID
+    INNER JOIN PRODUCT_CATEGORY PC ON PC.ProductCategoryID = PT.ProductCategoryID
+   
+    
+SELECT * FROM DIM_PRODUCT

@@ -1,0 +1,61 @@
+create or replace table DIM_CUSTOMER (
+	DimCustomerID              INT IDENTITY(1,1) CONSTRAINT PK_DimCustomerID PRIMARY KEY NOT NULL,
+    DimLocationID              INT CONSTRAINT FK_DimLocationIDCustomer FOREIGN KEY REFERENCES Dim_Location (DimLocationID) NOT NULL,
+    SourceCustomerID           VARCHAR(255) NOT NULL,
+    FullName                   VARCHAR(255) NOT NULL,
+    FirstName                  VARCHAR(255) NOT NULL,
+    LastName                   VARCHAR(255) NOT NULL,
+    Gender                     VARCHAR(255) NOT NULL,
+    EmailAddress               VARCHAR(255) NOT NULL,
+    PhoneNumber                VARCHAR(255) NOT NULL
+  )
+  
+  INSERT INTO DIM_CUSTOMER (
+	DimCustomerID,
+    DimLocationID,
+    SourceCustomerID,
+    FullName,
+    FirstName,
+    LastName,
+    Gender,
+    EmailAddress,
+    PhoneNumber
+  )
+  VALUES(
+    -1,
+    -1,
+    -1,
+    'Unknown',
+    'Unknown',
+    'Unknown',
+    'Unknown',
+    'Unknown',
+    'Unknown'
+  )
+
+
+INSERT INTO DIM_CUSTOMER (
+    DimLocationID,
+    SourceCustomerID,
+    FullName,
+    FirstName,
+    LastName,
+    Gender,
+    EmailAddress,
+    PhoneNumber
+  )
+  SELECT 
+    L.DimLocationID,
+    C.CustomerID AS SourceCustomerID,
+    CONCAT(C.FIRSTNAME, ' ', C.LASTNAME) AS FULLNAME,
+    C.FirstName,
+    C.LastName,
+    C.Gender,
+    C.EmailAddress,
+    C.PhoneNumber
+   FROM CUSTOMER C
+   INNER JOIN Dim_Location L
+   on C.Address = L.Address
+
+  
+  SELECT * FROM DIM_CUSTOMER

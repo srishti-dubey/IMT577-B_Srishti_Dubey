@@ -1,0 +1,42 @@
+create or replace table DIM_STORE (
+	DimStoreID              INT IDENTITY(1,1) CONSTRAINT PK_DimStoreID PRIMARY KEY NOT NULL,
+    DimLocationID           INT CONSTRAINT FK_DimLocationIDCustomer FOREIGN KEY REFERENCES Dim_Location (DimLocationID) NOT NULL,
+    SourceStoreID           INT NOT NULL,
+    StoreNumber             INT NOT NULL,
+    StoreManager            VARCHAR(255)  NOT NULL
+  )
+  
+  INSERT INTO DIM_STORE (
+	DimStoreID,
+    DimLocationID,
+    SourceStoreID,
+    StoreNumber,
+    StoreManager
+  )
+  VALUES(
+    -1,
+    -1,
+    -1,
+    -1,
+    'Unknown'
+  )
+  
+  SELECT * FROM DIM_STORE
+
+ INSERT INTO DIM_STORE (
+    DimLocationID,
+    SourceStoreID,
+    StoreNumber,
+    StoreManager
+  )
+  SELECT 
+    L.DimLocationID,
+    S.StoreID AS SourceStoreID,
+    S.StoreNumber,
+    S.StoreManager
+    FROM STORE S
+    INNER JOIN
+    Dim_Location L 
+    ON L.Address = S.Address
+  
+  SELECT * FROM DIM_STORE

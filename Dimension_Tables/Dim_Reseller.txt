@@ -1,0 +1,50 @@
+create or replace table DIM_RESELLER (
+	DimResellerID              INT IDENTITY(1,1) CONSTRAINT PK_DimResellerID PRIMARY KEY NOT NULL,
+    DimLocationID              INT CONSTRAINT FK_DimLocationIDReseller FOREIGN KEY REFERENCES Dim_Location (DimLocationID) NOT NULL,
+    SourceResellerID           VARCHAR(255) NOT NULL,
+    ResellerName               VARCHAR(255) NOT NULL,
+    ContactName                VARCHAR(255) NOT NULL,
+    PhoneNumber                VARCHAR(255) NOT NULL,
+    Email                      VARCHAR(255) NOT NULL
+  )
+  
+  INSERT INTO DIM_RESELLER (
+	DimResellerID,
+    DimLocationID,
+    SourceResellerID,
+    ResellerName,
+    ContactName,
+    PhoneNumber,
+    Email
+  )
+  VALUES(
+    -1,
+    -1,
+    -1,
+    'Unknown',
+    'Unknown',
+    'Unknown',
+    'Unknown'
+  )
+  
+  SELECT * FROM DIM_Reseller
+
+INSERT INTO DIM_RESELLER (
+    DimLocationID,
+    SourceResellerID,
+    ResellerName,
+    ContactName,
+    PhoneNumber,
+    Email
+  )
+  SELECT 
+    L.DimLocationID,
+    R.ResellerID AS SourceResellerID,
+    R.ResellerName,
+    R.Contact AS ContactName,
+    R.PhoneNumber,
+    R.EMAILADDRESS AS Email
+   FROM RESELLER R
+   INNER JOIN Dim_Location L
+   on R.Address = L.Address
+   
