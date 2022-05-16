@@ -1,0 +1,61 @@
+create or replace table Fact_SRCSalesTarget (
+    DimStoreID                          INT CONSTRAINT FK_DimStoreIDSRCSalesTrgt FOREIGN KEY REFERENCES Dim_Store(DimStoreID),
+    DimResellerID                       INT CONSTRAINT FK_DimResellerIDSRCSalesTrgt FOREIGN KEY REFERENCES Dim_Reseller(DimResellerID),
+    DimChannelID                        INT CONSTRAINT FK_DimChannelIDSRCSalesTrgt FOREIGN KEY REFERENCES Dim_Channel(DimChannelID),
+    DimTargetDate                       number(9) CONSTRAINT FK_DimTargetDateIDSRCSalesTrgt FOREIGN KEY REFERENCES Dim_Date(DATE_PKEY),
+    SalesTargetAmount                   FLOAT
+  )
+
+INSERT INTO Fact_SRCSalesTarget(
+            DimStoreID,
+            DimResellerID,
+            DimChannelID,
+            DimTargetDate,
+            SalesTargetAmount           
+)
+VALUES (
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+)
+
+
+
+INSERT INTO Fact_SRCSalesTarget(
+            DimStoreID,
+            DimResellerID,
+            DimChannelID,
+            DimTargetDate,
+            SalesTargetAmount           
+)   
+    SELECT NVL(S.DIMSTOREID,-1) AS DIMSTOREID,
+       NVL(R.DIMRESELLERID,-1) AS DIMRESELLERID,
+           C.DimChannelID,
+           D.DATE_PKEY AS DimTargetDate,
+           TD.TARGETSALESAMOUNT AS SalesTargetAmount
+     FROM TARGETDATA_CHANNELRESELLER_AND_STORE  TD
+     LEFT JOIN Dim_Date D ON CAST(TD.YEAR AS DATETIME) = CAST(D.YEAR AS DATETIME)
+     LEFT JOIN Dim_Channel C ON C.CHANNELNAME = 
+        CASE 
+            WHEN TD.CHANNELNAME = 'Online' THEN 'On-line'
+            ELSE TD.CHANNELNAME
+        END
+     LEFT JOIN Dim_Reseller R ON TD.TARGETNAME = 
+        CASE
+            WHEN R.RESELLERNAME = 'Mississipi Distributors' THEN 'Mississipi Distributors'
+            ELSE R.RESELLERNAME
+        END
+     LEFT JOIN Dim_Store S ON S.StoreNumber =
+        CASE 
+            WHEN TD.TargetName = 'Store Number 5' THEN 5
+            WHEN TD.TargetName = 'Store Number 8' THEN 8
+            WHEN TD.TargetName = 'Store Number 10' THEN 10
+            WHEN TD.TargetName = 'Store Number 21' THEN 21
+            WHEN TD.TargetName = 'Store Number 34' THEN 34
+            WHEN TD.TargetName = 'Store Number 39' THEN 39
+            ELSE NULL
+         END
+
+SELECT * FROM Fact_SRCSalesTarget
