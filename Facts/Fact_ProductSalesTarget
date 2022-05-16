@@ -1,0 +1,21 @@
+create or replace table Fact_ProductSalesTarget (
+    DimProductID                        INT CONSTRAINT FK_DimProductIDProdSalesTrgt FOREIGN KEY REFERENCES Dim_Product(DimProductID) NOT NULL,
+    DimTargetDateID                     number(9) CONSTRAINT FK_DimDimTargetDateIDProdSalesTrgt FOREIGN KEY REFERENCES Dim_Date(DATE_PKEY) NOT NULL,
+    ProductTargetSalesQuantity          INT NOT NULL
+  )
+  
+  INSERT INTO Fact_ProductSalesTarget (
+	DimProductID,
+    DimTargetDateID,
+    ProductTargetSalesQuantity
+  )
+  SELECT distinct
+    P.DimProductID,
+    D.DATE_PKEY AS DimTargetDateID,
+    FLOOR(((TP.SALESQUANTITYTARGET)/365),2) AS ProductTargetSalesQuantity
+   FROM Target_Product TP
+   INNER JOIN Dim_Product P ON P.SOURCEPRODUCTID = TP.PRODUCTID
+   INNER JOIN Dim_Date D ON D.YEAR = TP.YEAR
+  
+
+SELECT * FROM Fact_ProductSalesTarget
