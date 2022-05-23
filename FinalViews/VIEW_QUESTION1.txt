@@ -1,0 +1,15 @@
+CREATE VIEW VIEW_QUESTION1
+AS 
+select distinct 
+    a.STORENUMBER,
+    sum(c.SALEAMOUNT) SaleAmount,--, left(dimtargetdateid,4) Year, 
+    sum(SALESTARGETAMOUNT) TargetAmount,
+    sum(SALETOTALPROFIT) SALETOTALPROFIT, 
+    count(c.DIMPRODUCTID) ProductCount, 
+    sum(c.SALEQUANTITY) quantity
+from dim_store a 
+join FACT_SRCSALESTARGET b on a.dimstoreid=b.dimstoreid
+join fact_salesactual c on  a.dimstoreid=c.dimstoreid 
+where a.STORENUMBER in (5,8) and 
+left(dimtargetdate,4)=2014
+group by a.storenumber
