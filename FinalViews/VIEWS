@@ -1,0 +1,30 @@
+CREATE OR REPLACE SECURE VIEW Store_SalesTarget
+    AS
+    SELECT DISTINCT
+        Dim_Store.StoreNumber
+        ,Dim_Date.Year
+        ,Fact_SRCSalesTarget.SalesTargetAmount AS Target
+    FROM Dim_Store
+    INNER JOIN Fact_SRCSalesTarget ON
+    Fact_SRCSalesTarget.DimStoreID = Dim_Store.DimStoreID
+    INNER JOIN Dim_Date ON
+    Dim_Date.Date_Pkey = Fact_SRCSalesTarget.DimTargetDateID
+    GROUP BY Dim_Date.Year, Dim_Store.StoreNumber, Fact_SRCSalesTarget.SalesTargetAmount
+    ORDER BY Dim_Store.StoreNumber, Dim_Date.Year
+
+
+
+
+CREATE OR REPLACE SECURE VIEW Store_SalesActual
+    AS
+    SELECT DISTINCT
+            Dim_Store.StoreNumber
+            ,Dim_Date.Year
+            ,SUM(Fact_SalesActual.SaleAmount) AS SalesActual
+        FROM Fact_SalesActual 
+        INNER JOIN Dim_Store ON
+        Fact_SalesActual.DimStoreID = Dim_Store.DimStoreID
+        INNER JOIN Dim_Date ON
+        Dim_Date.Date_Pkey = Fact_SalesActual.DimSaleDateID
+        GROUP BY Dim_Store.StoreNumber, Dim_Date.Year
+        ORDER BY Dim_Store.StoreNumber, Dim_Date.Year
